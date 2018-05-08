@@ -13,3 +13,6 @@ prebackup.ps1  -  prebackup script that can be used for a single VM backup
 prebackup.ResourcePool.ps1  - prebackup script that can be used if a VMware resource pool needs to be backed up
 
 postbackup.ps1 - postbackup clean up script
+
+
+The scripts are tested with a HPE SimpliVity 380 cluster running OmniStack 3.7.3 together Veeam Availability Suite 9.5.
