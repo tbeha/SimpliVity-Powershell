@@ -5,6 +5,7 @@ The powershell scripts here can be used to build an integration of SimpliVity ba
 The following powershell scripts are available:
 
 OmniStackCmds.psm1          - SimpliVity 380 Rest API powershell commands v1 (OmniStack v.3.7.3)
+
 SimpliVity-PS-Cmdlets.psm1  - HPE SimpliVity Rest API powershell commands v2 (OmniStack v.3.7.6U1)
 
 createXMLbackupfile.ps1     - used to create the  XML parameter file (SvtBackupJob.xml) together with encryption key (AES.key) that is used to encrypt the password of the single-sign on user, that is needed to communicate with the OVC, the VMware vCenter and the Veeam backup server.
