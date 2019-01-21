@@ -1,5 +1,7 @@
 ﻿<# 
 .SYNOPSIS
+	Attention: lately some issues were found with this script. I cannot recommend to use it, but I kept it here for reference.
+	
 	Prebackup script that creates a SimpliVity Backup, followed by a SimpliVity Restore Operation 
 	before the external backup software backs up the restored VM on the DR/Central site
 	(c) Thomas Beha, April 2018
