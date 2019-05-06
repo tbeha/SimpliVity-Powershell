@@ -16,5 +16,4 @@ The scripts are tested with a HPE SimpliVity 380 cluster running OmniStack 3.7.7
 
 Prerequisites for the Veeam backup scripts to work:
 
-- VMware Powershell CLI     
-- Veeam Powershell Snapin must be installed on the Veeam backup server
+- VMware Powershell CLI must be installed on the Veeam backup server    
