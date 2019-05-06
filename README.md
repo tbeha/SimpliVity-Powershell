@@ -18,3 +18,9 @@ prebackup.ResourcePool.ps1  - prebackup script that can be used if a VMware reso
 postbackup.ps1 - postbackup clean up script
 
 The scripts are tested with a HPE SimpliVity 380 cluster running OmniStack 3.7.7 together Veeam Availability Suite 9.5.4
+
+
+Prerequisites for the Veeam backup scripts to work:
+
+- VMware Powershell CLI     
+- Veeam Powershell Snapin must be installed on the Veeam backup server
