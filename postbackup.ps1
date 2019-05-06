@@ -1,7 +1,7 @@
 ﻿<# 
 .SYNOPSIS
 	Postbackup script that removes the temporary restored SimpliVity Backup VMs restored on the DR/Central site
-	(c) Thomas Beha, April 2018
+	(c) Thomas Beha, May 2019
 .DESCRIPTION
 	This script will do the following tasks:
 		1. removes the temporary restored SimpliVity Backup VMs restored on the DR/Central site 
@@ -43,12 +43,13 @@ param( $xmlfile )
   <VeeamPool id="VeeamBackup"></VeeamPool>
 </ScriptInputs>
 #>
-Import-Module -Name "c:\posh\OmniStackCmds.psm1"
+Import-Module -Name "c:\posh\SimpliVity-PS-Cmdlets.psm1"
 Import-Module -Name "C:\Program Files (x86)\VMware\Infrastructure\PowerCLI\Modules\VMware.VimAutomation.Core"
+
 
 try
 {
-	$Key = Get-Content ("C:\Users\Administrator\AES.key") -ErrorAction Stop
+	$Key = Get-Content ("C:\posh\veeam\veeam.key") -ErrorAction Stop
 }
 Catch
 {
@@ -106,7 +107,7 @@ function ConnectvCenter
 	}
 
     $response = Connect-VIServer -Server $vCenter -Protocol https -User $Username -Password $Password
-    Write-Host "Connected to vCenter: " $response.Name
+    log "Connected to vCenter: $response.Name"
 }
 
 function DisconnectvCenter
@@ -153,28 +154,47 @@ function RemoveVMs
 
     $response = Get-VM -Name $VMname
     if($response){
-        Write-Host "VM $VMname exists and will be deleted"
+        log "VM $VMname exists and will be deleted"
         $response = Remove-VM -VM $VMname -DeletePermanently -Confirm:$false
     }   
 }
 
 
+function log
+{
+	[CmdletBinding()]
+	param(
+		[Parameter(mandatory=$true)]
+            [string] $Value
+	)   
+    process{
+        Add-Content -path $backuplog -Value $Value
+        Write-Host $Value
+    }
+}
+
+$date = (Get-Date -format yyyy-MM-dd-hh-mm-ss)
+$logname = "SVT-Veeam-PostBackup-"+$date+".log"
+$backuplog = "C:\posh\Veeam\"+$logname
+new-item -path $backuplog -ItemType File -Force
+
+
 # Open a connection to the OVC RestAPI
-Write-Host "Get OmniStack Connection..."
+log "Get OmniStack Connection..."
 ConnectOmniStack -Server $ovc -IgnoreCertReqs -OVCusername $MyCredential.GetNetworkCredential().UserName -OVCpassword $MyCredential.GetNetworkCredential().Password
 # Open a connection to the vCenter
-Write-Host "Open vCenter Connection ..."
+log "Open vCenter Connection ..."
 ConnectvCenter -vCenter $vcenter -Username $MyCredential.GetNetworkCredential().UserName -Password $MyCredential.GetNetworkCredential().Password
 
 # Work the list VMs
 # <VMtoBackup id="TBvbackupTest" destination="DR" retention="60" restore="SuperCruise" restoreTag="DC1"></VMtoBackup>
 
-Write-Host $VMs.Count"VMs to backup"
+log $VMs.Count"VMs to backup"
 foreach($vm in $VMs)
 {
 	# Define the name of the restore VM
 	$restorename = $vm.id + $vm.restoreTag
-    Write-Host "Remove VM : " $restorename
+    log "Remove VM : $restorename"
 	# Check if the VM already exists on this vCenter
 	# if yes, delete the old VM before you attempt a restore
 
