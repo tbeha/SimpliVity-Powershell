@@ -31,7 +31,8 @@
 .EXAMPLE
 	powershell.exe c:\temp\prebackup.ps1 c:\temp\prebackup.xml
 #>
-param( $xmlfile )
+#param( $xmlfile )
+$xmlfile = "C:\posh\Veeam\SvtBackupJob.xml"
 <# Example XML file
 <?xml version="1.0"?>
 <!-- Prebackup Resource Pool Parameter File -->
@@ -52,7 +53,7 @@ param( $xmlfile )
 </ScriptInputs>
 #>
 
-Import-Module -Name "c:\posh\SimpliVity-PS-Cmdlets.psm1"
+Import-Module -Name "C:\posh\SimpliVity-PS-Cmdlets.psm1"
 Import-Module -Name "VMware.VimAutomation.Core"
 Add-PSSnapin -Name VeeamPSSnapin -ErrorAction SilentlyContinue
 
@@ -246,7 +247,7 @@ ConnectvCenter -vCenter $vcenter -Username $MyCredential.GetNetworkCredential().
 # Initiate a SimpliVity Backup of the VM to backup
 # Use an app-aware/VSS backup if possible
 log "Backup VM: $VMtobackup" 
-$backupname = BackupVM -VM $VMtobackup -Destination $backupdestination -Retention $backupretention
+$backupname = BackupVM -VMname $VMtobackup -Destination $backupdestination -Retention $backupretention
 log "VM backup complete - Backupname:  $backupname"
 
 # Get the backup id of the just completed backup

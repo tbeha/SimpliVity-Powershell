@@ -603,7 +603,7 @@ function BackupVM{
 	[CmdletBinding()]
 	param(
 		[Parameter(Mandatory=$true,Position=1,ValueFromPipeline=$True)]
-		[string]$VM,
+		[string]$VMname,
 		[string]$Retention,
 		[string]$Destination
 	)
@@ -614,20 +614,20 @@ function BackupVM{
 
 	#Get VM Id of Source VM
     $vms = GetOmniStackVM -VMname $VMname
-    foreach($x in $vms.virtual_machines){
+	foreach($x in $vms.virtual_machines){
         if($x.state -eq 'ALIVE'){
             $vmid=$x.id
             $appaware = $x.app_aware_vm_status
         }
     }
-	Write-Host "Backup VM $VM ID: " $vmid
+	Write-Host "Backup VM $VMname ID: " $vmid
 
 	# Prepare backup parameters
 	$date = Get-Date
 	$date = $date.ToUniversalTime()
 	$date = $date -replace '/',''
 	$date = $date -replace ' ',''
-	$backupname = $VM + $date
+	$backupname = $VMname + $date
 	$backupparams = @{}
 	$backupparams.Add("backup_name", "$backupname")
 	$backupparams.Add("destination_id", "$Destination")

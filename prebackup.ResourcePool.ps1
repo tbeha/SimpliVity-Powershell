@@ -32,6 +32,7 @@
 	powershell.exe c:\temp\prebackup.ps1 c:\temp\prebackup.xml
 #>
 param( $xmlfile )
+#$xmlfile = "C:\posh\Veeam\ResourcePool.WIN.xml"
 <# Example XML file
 <?xml version="1.0"?>
 <!-- Prebackup Resource Pool Parameter File -->
@@ -62,7 +63,6 @@ Catch
 {
 }
 
-#[xml] $xml = (get-content "C:\posh\test.xml")
 [xml] $xml = (get-content $xmlfile)
 $VMs  = ($xml.GetElementsByTagName("VMtoBackup"))
 $ovc = ($xml.GetElementsByTagName("OVC")).id
@@ -169,14 +169,14 @@ function log
             [string] $Value
 	)   
     process{
-        Add-Content -path $cleanlog -Value $Value
+        Add-Content -path $backuplog -Value $Value
     }
 }
 
 $date = (Get-Date -format yyyy-MM-dd-hh-mm-ss)
 $logname = "SVT-Veeam-"+$date+".log"
-$cleanlog = "C:\posh\Veeam\"+$logname
-new-item -path $cleanlog -ItemType File -Force
+$backuplog = "C:\posh\Veeam\Logfiles\"+$logname
+new-item -path $backuplog -ItemType File -Force
 
 # Open a connection to the OVC RestAPI
 log "Get OmniStack Connection..."

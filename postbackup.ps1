@@ -55,15 +55,13 @@ Catch
 {
 }
 
+#[xml] $xml = (get-content "C:\posh\veeam\ResourcePool.lIN.xml")
 [xml] $xml = (get-content $xmlfile)
 
 $VMs  = ($xml.GetElementsByTagName("VMtoBackup"))
 $ovc = ($xml.GetElementsByTagName("OVC")).id
 $vcenter = ($xml.GetElementsByTagName("VCENTER")).id
 $veeam_pool = ($xml.GetElementsByTagname("VeeamPool")).id
-$VMs  = ($xml.GetElementsByTagName("VMtoBackup"))
-$ovc = ($xml.GetElementsByTagName("OVC")).id
-
 
 $MyCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($xml.GetElementsByTagName("Username")).id , (($xml.GetElementsByTagName("Password")).id | ConvertTo-SecureString -Key $Key)
 
@@ -175,7 +173,7 @@ function log
 
 $date = (Get-Date -format yyyy-MM-dd-hh-mm-ss)
 $logname = "SVT-Veeam-PostBackup-"+$date+".log"
-$backuplog = "C:\posh\Veeam\"+$logname
+$backuplog = "C:\posh\Veeam\Logfiles\"+$logname
 new-item -path $backuplog -ItemType File -Force
 
 
@@ -189,7 +187,7 @@ ConnectvCenter -vCenter $vcenter -Username $MyCredential.GetNetworkCredential().
 # Work the list VMs
 # <VMtoBackup id="TBvbackupTest" destination="DR" retention="60" restore="SuperCruise" restoreTag="DC1"></VMtoBackup>
 
-log $VMs.Count"VMs to backup"
+log "$VMs.Count VMs to backup"
 foreach($vm in $VMs)
 {
 	# Define the name of the restore VM
